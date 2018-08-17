@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+<head>
+  <title>Changefeed Example</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font: 13px Helvetica, Arial;
+    }
+
+    #messages {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    #messages li {
+      padding: 5px 10px;
+    }
+
+    #messages li:nth-child(odd) {
+      background: #eee;
+    }
+  </style>
+</head>
+<body>
+
+<br><br>
+<h1>Notification Example</h1>
+<form id="frmMessage" action="">
+  <input id="newMessage" autocomplete="off"/>
+  <button>Send Notification</button>
+</form>
+<ul id="messages"></ul>
+<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+<script>
+  var socket = io();
+  $('#frmMessage').submit(function () {
+    socket.emit('send:message', {message: $('#newMessage').val()});
+    $('#newMessage').val('');
+    return false;
+  });
+
+  socket.on('realtime:message', function (msg) {
+    console.log(JSON.stringify(msg, null, 2));
+    $('#messages').append($('<li>').text(msg));
+  });
+</script>
+
+</body>
+</html>
